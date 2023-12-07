@@ -1,7 +1,21 @@
-import React from 'react';
+import Button from './Button';
 
 const Search = () => {
-  return <div>Search</div>;
+  return (
+    <>
+      <form className='bg-white shadow-md rounded px-2  my-4 w-[500px]'>
+        <div className='flex items-center border-b border-teal-500 py-2'>
+          <input
+            className='appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none '
+            type='text'
+            placeholder='Search for jobs or services'
+            aria-label='search'
+          />
+        </div>
+      </form>
+      <Button name='Search' />
+    </>
+  );
 };
 
 export default Search;
