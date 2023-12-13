@@ -1,10 +1,22 @@
-import { useState } from 'react';
+/* eslint-disable no-unused-vars */
+import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Logo, close, menu } from '@/assets';
 import { navLinks } from '@/constants';
 import styles from '@/style';
+import Button from '@/components/Button';
+import { useAuth } from '@/store/auth';
 
 const Navbar = () => {
+  const { isLogin, user } = useAuth();
+
+  useEffect(() => {
+    // eslint-disable-next-line no-constant-condition
+
+    if (!isLogin) {
+      console.log('login');
+    }
+  }, [isLogin]);
   const [active, setActive] = useState('Home');
   const [toggle, setToggle] = useState(false);
 
@@ -28,6 +40,15 @@ const Navbar = () => {
                   <NavLink to={`${nav.id}`}>{nav.title}</NavLink>
                 </li>
               ))}
+              <div>
+                {}
+                <button className='py-2 px-6 font-poppins font-medium text-[18px] ml-4 text-primary bg-blue-gradient rounded-full outline-none hover:bg-blue-gray-50'>
+                  Login
+                </button>
+                <button className='py-2 px-6 font-poppins font-medium text-[18px] ml-4 text-primary bg-blue-gradient rounded-full outline-none hover:bg-blue-gray-50'>
+                  Register
+                </button>
+              </div>
             </ul>
 
             <div className='sm:hidden flex flex-1 justify-end items-center'>
@@ -53,6 +74,7 @@ const Navbar = () => {
                       <a href={`#${nav.id}`}>{nav.title}</a>
                     </li>
                   ))}
+                  <Button name='Search' styles={'w-[200px]'} />
                 </ul>
               </div>
             </div>
