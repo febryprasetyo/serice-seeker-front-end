@@ -24,12 +24,8 @@ export function Signup() {
     username: '',
     email: '',
     phone: '',
-    address: {
-      street: '',
-      city: '',
-      province: '',
-    },
-    role: 'employer', // Default role
+    address: '',
+    role: 'employer',
     password: '',
   });
   const [errForm, setErrForm] = useState();
@@ -49,11 +45,7 @@ export function Signup() {
     }
     setLoadingSignup(true);
 
-    const fullAddress = `${form.address.street} ${form.address.city} ${form.address.province}`;
-
-    const updatedForm = { ...form, address: fullAddress };
-
-    actionSignup(updatedForm);
+    actionSignup(form);
   };
 
   useEffect(() => {
@@ -122,6 +114,18 @@ export function Signup() {
               label='Phone'
               size='lg'
             />
+            {/* Kolom "Address" */}
+            <Input
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  address: e.target.value,
+                })
+              }
+              type='text'
+              label='Address'
+              size='lg'
+            />
             <Input
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               type='password'
@@ -129,58 +133,13 @@ export function Signup() {
               size='lg'
             />
 
-            {/* Address Fields */}
-            <Input
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  address: { ...form.address, street: e.target.value },
-                })
-              }
-              type='text'
-              label='Street'
-              size='lg'
-            />
-            <Input
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  address: { ...form.address, city: e.target.value },
-                })
-              }
-              type='text'
-              label='City'
-              size='lg'
-            />
-            <Input
-              onChange={(e) =>
-                setForm({
-                  ...form,
-                  address: { ...form.address, province: e.target.value },
-                })
-              }
-              type='text'
-              label='Province'
-              size='lg'
-            />
-
             {/* Role Tabs */}
-            <Tabs
-              defaultValue='employer' // Default tab value
-              color='blue'
-              size='lg'
-              className='mb-4'>
-              <Tab
-                value='employer'
-                onClick={() => setForm({ ...form, role: 'employer' })}
-              >
-                Employer
+            <Tabs value={form.role} color='blue' size='lg' className='mb-4'>
+              <Tab value='employer' onClick={() => setForm({ ...form, role: 'employer' })}>
+                  Employer
               </Tab>
-              <Tab
-                value='jobseeker'
-                onClick={() => setForm({ ...form, role: 'jobseeker' })}
-              >
-                Jobseeker
+              <Tab value='jobseeker' onClick={() => setForm({ ...form, role: 'job_seeker' })}>
+                  Jobseeker
               </Tab>
             </Tabs>
           </CardBody>
@@ -192,17 +151,6 @@ export function Signup() {
               fullWidth>
               Signup
             </Button>
-            <div className='mt-4 text-center'>
-              {isLogin ? (
-                <p>
-                  Tidak punya akun? <Link to='/signup'>Daftar</Link>
-                </p>
-              ) : (
-                <p>
-                  Sudah punya akun? <Link to='/login'>Login</Link>
-                </p>
-              )}
-            </div>
           </CardFooter>
         </Card>
       </div>

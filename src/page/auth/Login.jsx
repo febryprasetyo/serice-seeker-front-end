@@ -84,17 +84,6 @@ export function Login() {
               fullWidth>
               Sign In
             </Button>
-            <div className='mt-4 text-center'>
-              {isLogin ? (
-                <p>
-                  Sudah punya akun? <Link to='/login'>Login</Link>
-                </p>
-              ) : (
-                <p>
-                  Tidak punya akun? <Link to='/signup'>Daftar</Link>
-                </p>
-              )}
-            </div>
           </CardFooter>
         </Card>
       </div>

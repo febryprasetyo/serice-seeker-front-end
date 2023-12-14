@@ -13,7 +13,7 @@ const Search = () => {
           />
         </div>
       </form>
-      <Button name='Search' styles={'w-[200px]'} />
+      <Button name='Search' styles={'py-4 px-6 mt-2 font-poppins font-medium text-[18px] text-primary bg-blue-gradient rounded-[10px] outline-none w-[200px]'} />
     </>
   );
 };
