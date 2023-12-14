@@ -1,9 +1,10 @@
+const BaseURLApi = import.meta.env.ADDRESS_URL_API
+
+
 export const getOptionProvincies = async()=>{
     try {
-        const response = await fetch(`${BaseURLApi}/data/station/province-list`, {
-            headers: {
-                "Authorization": `Bearer ${cookie.get("token")}`
-            }
+        const response = await fetch(`${BaseURLApi}/api/provinces.json`, {
+           
         })
         const respJson = response.json()
         
@@ -15,12 +16,10 @@ export const getOptionProvincies = async()=>{
     }
 }
 
-export const getOptionCities = async()=>{
+export const getOptionCities = async(id)=>{
     try {
-        const response = await fetch(`${BaseURLApi}/data/station/city-list/${id}`, {
-            headers: {
-                "Authorization": `Bearer ${cookie.get("token")}`
-            }
+        const response = await fetch(`${BaseURLApi}/api/regencies/${id}.json`, {
+            
         })
         const respJson = response.json()
         return respJson

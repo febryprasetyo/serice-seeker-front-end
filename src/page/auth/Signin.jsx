@@ -1,8 +1,13 @@
+/* eslint-disable no-unused-vars */
 import styles from '@/style';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/store/auth';
 import { useNavigate } from 'react-router-dom';
+import {
+  getOptionCities,
+  getOptionProvincies,
+} from '@/service/optionSelectService';
 
 import {
   Card,
