@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+// eslint-disable-next-line no-undef
 const withMT = require('@material-tailwind/react/utils/withMT');
 
 // eslint-disable-next-line no-undef
@@ -26,5 +27,6 @@ module.exports = withMT({
       xl: '1700px',
     },
   },
-  plugins: [],
+  // eslint-disable-next-line no-undef
+  plugins: [require('@tailwindcss/forms')],
 });

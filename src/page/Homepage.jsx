@@ -1,4 +1,7 @@
+/* eslint-disable no-unused-vars */
+import { useState, useEffect } from 'react';
 import styles from '../style';
+import axios from 'axios';
 
 import {
   Footer,
@@ -9,7 +12,31 @@ import {
   WhyChoose,
 } from '../components';
 
+import { useAuth } from '@/store/auth';
+
 const Homepage = () => {
+  const { isLogin, user } = useAuth();
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get('https://service-seeker-api.vercel.app/jobs/all')
+      .then((response) => {
+        setPosts(response.data);
+        console.log(response.data.jobs);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line no-constant-condition
+
+    if (!isLogin) {
+      console.log('login');
+    }
+  }, [isLogin]);
   return (
     <div className='bg-primary w-full overflow-hidden'>
       <div className={`bg-primary ${styles.flexStart}`}>
