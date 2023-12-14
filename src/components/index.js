@@ -1,8 +1,11 @@
 // Component
 import Button from './Button';
 import Search from './Search';
-import CardCategory from './CardCategory';
 
+// Card
+import CardCategory from './CardCategory';
+import CardReview from './card/card-review';
+import CardJob from './card/CardJob';
 // HomePage Section
 import Navbar from './homepage/Navbar';
 import Hero from './homepage/Hero';
@@ -16,6 +19,8 @@ export {
   Button,
   Search,
   CardCategory,
+  CardReview,
+  CardJob,
   Navbar,
   Hero,
   PopularCategory,

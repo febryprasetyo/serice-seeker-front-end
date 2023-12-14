@@ -61,4 +61,48 @@ export const useAuth = create((set) => ({
       }
     }
   },
+
+  // actionSignup method
+  loadingSignup: false,
+  isSignup: false,
+  setLoadingSignup: (payload) => {
+    return set({ loadingSignup: payload });
+  },
+  actionSignup: async (payload) => {
+    localStorage.removeItem('user');
+    try {
+      const resp = await fetch(`${import.meta.env.VITE_URL_API}/auth/register`, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const respJson = await resp.json();
+
+      if (respJson?.success) {
+        return set((state) => ({
+          ...state,
+          isSignup: true,
+          loadingSignup: false,
+        }));
+      } else {
+        return set((state) => ({
+          ...state,
+          errMsg: respJson.message,
+          loadingSignup: false,
+        }));
+      }
+    } catch (error) {
+      let message;
+      if (error instanceof Error) {
+        message = error.message;
+        return set((state) => ({
+          ...state,
+          errMsg: message,
+          loadingSignup: false,
+        }));
+      }
+    }
+  },
 }));

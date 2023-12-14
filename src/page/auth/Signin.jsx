@@ -1,4 +1,9 @@
 import styles from '@/style';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useAuth } from '@/store/auth';
+import { useNavigate } from 'react-router-dom';
+
 import {
   Card,
   CardHeader,
@@ -12,9 +17,60 @@ import {
   Tab,
   TabPanel,
 } from '@material-tailwind/react';
-import { useState } from 'react';
 
 const Signin = () => {
+  const {
+    actionSignup,
+    setLoadingSignup,
+    errMsg,
+    loadingSignup,
+    isSignup,
+    isLogin,
+  } = useAuth();
+  const [form, setForm] = useState({
+    firstName: '',
+    lastName: '',
+    username: '',
+    email: '',
+    phone: '',
+    address: {
+      street: '',
+      city: '',
+      province: '',
+    },
+    role: 'employer', // Default role
+    password: '',
+  });
+  const [errForm, setErrForm] = useState();
+  const navigate = useNavigate();
+
+  const handleSubmitSignup = () => {
+    if (
+      !form.firstName ||
+      !form.lastName ||
+      !form.username ||
+      !form.email ||
+      !form.phone ||
+      !form.password
+    ) {
+      setErrForm('Pastikan semua kolom terisi');
+      return;
+    }
+    setLoadingSignup(true);
+
+    const fullAddress = `${form.address.street} ${form.address.city} ${form.address.province}`;
+
+    const updatedForm = { ...form, address: fullAddress };
+
+    actionSignup(updatedForm);
+  };
+
+  useEffect(() => {
+    if (isSignup) {
+      navigate('/login');
+    }
+  }, [isSignup, navigate]);
+
   const { type, setType } = useState('job_sekeer');
   return (
     <div className=' w-full overflow-hidden'>
@@ -45,19 +101,27 @@ const Signin = () => {
                 </Typography>
               </CardHeader>
               <CardBody>
-                <Tabs value={type} className='overflow-visible'>
+                <Tabs value={type} className='overflow-hidden'>
                   <TabsHeader className='relative z-0 '>
-                    <Tab value='employer' onClick={() => setType('employer')}>
+                    <Tab
+                      value='employer'
+                      onChange={(e) =>
+                        setForm({ ...form, employer: e.target.value })
+                      }
+                      onClick={() => setForm({ ...form, role: 'employer' })}>
                       Employer
                     </Tab>
                     <Tab
                       value='job_sekeer'
+                      onChange={(e) =>
+                        setForm({ ...form, jobseeker: e.target.value })
+                      }
                       onClick={() => setType('job_sekeer')}>
                       Job Seeker
                     </Tab>
                   </TabsHeader>
                   <TabsBody
-                    className='!overflow-x-hidden !overflow-y-visible'
+                    className='!overflow-x-hidden !overflow-y-hidden'
                     animate={{
                       initial: {
                         x: type === 'employer' ? 400 : -400,
@@ -80,7 +144,9 @@ const Signin = () => {
                               First Name
                             </Typography>
                             <Input
-                              maxLength={5}
+                              onChange={(e) =>
+                                setForm({ ...form, firstName: e.target.value })
+                              }
                               containerProps={{ className: 'min-w-[72px]' }}
                               placeholder='First Name'
                               className=' !border-t-blue-gray-200 focus:!border-t-gray-900'
@@ -98,7 +164,9 @@ const Signin = () => {
                               Last Name
                             </Typography>
                             <Input
-                              maxLength={4}
+                              onChange={(e) =>
+                                setForm({ ...form, lastName: e.target.value })
+                              }
                               containerProps={{ className: 'min-w-[72px]' }}
                               placeholder='Last Name'
                               className=' !border-t-blue-gray-200 focus:!border-t-gray-900'
@@ -117,6 +185,9 @@ const Signin = () => {
                             Username
                           </Typography>
                           <Input
+                            onChange={(e) =>
+                              setForm({ ...form, username: e.target.value })
+                            }
                             type='text'
                             placeholder='Username'
                             className=' !border-t-blue-gray-200 focus:!border-t-gray-900'
@@ -134,6 +205,9 @@ const Signin = () => {
                             Your Email
                           </Typography>
                           <Input
+                            onChange={(e) =>
+                              setForm({ ...form, email: e.target.value })
+                            }
                             type='email'
                             placeholder='name@mail.com'
                             className=' !border-t-blue-gray-200 focus:!border-t-gray-900'
@@ -143,7 +217,27 @@ const Signin = () => {
                             }}
                           />
                         </div>
+                        <div>
+                          <Typography
+                            variant='small'
+                            color='blue-gray'
+                            className='mb-2 font-medium capitalize'>
+                            Address
+                          </Typography>
 
+                          <Input
+                            onChange={(e) =>
+                              setForm({ ...form, address: e.target.value })
+                            }
+                            maxLength={19}
+                            placeholder='Address'
+                            className=' !border-t-blue-gray-200 focus:!border-t-gray-900'
+                            labelProps={{
+                              className:
+                                'before:content-none after:content-none',
+                            }}
+                          />
+                        </div>
                         <div>
                           <Typography
                             variant='small'
@@ -153,7 +247,10 @@ const Signin = () => {
                           </Typography>
 
                           <Input
-                            maxLength={19}
+                            onChange={(e) =>
+                              setForm({ ...form, phone: e.target.value })
+                            }
+                            maxLength={13}
                             placeholder='Phone Number'
                             className=' !border-t-blue-gray-200 focus:!border-t-gray-900'
                             labelProps={{
@@ -170,6 +267,9 @@ const Signin = () => {
                             Password
                           </Typography>
                           <Input
+                            onChange={(e) =>
+                              setForm({ ...form, password: e.target.value })
+                            }
                             type='password'
                             placeholder='**********'
                             className=' !border-t-blue-gray-200 focus:!border-t-gray-900'
@@ -179,9 +279,15 @@ const Signin = () => {
                             }}
                           />
                         </div>
-                        <Button size='lg'>Register</Button>
+                        <Button
+                          onClick={handleSubmitSignup}
+                          disabled={loadingSignup}
+                          size='lg'>
+                          Register
+                        </Button>
                       </form>
                     </TabPanel>
+
                     <TabPanel value='job_sekeer' className='p-0'>
                       <form className='mt-8 flex flex-col gap-4'>
                         <div className='my-4 flex items-center gap-4'>
@@ -193,6 +299,9 @@ const Signin = () => {
                               First Name
                             </Typography>
                             <Input
+                              onChange={(e) =>
+                                setForm({ ...form, firstName: e.target.value })
+                              }
                               maxLength={5}
                               containerProps={{ className: 'min-w-[72px]' }}
                               placeholder='First Name'
@@ -211,6 +320,9 @@ const Signin = () => {
                               Last Name
                             </Typography>
                             <Input
+                              onChange={(e) =>
+                                setForm({ ...form, lastName: e.target.value })
+                              }
                               maxLength={4}
                               containerProps={{ className: 'min-w-[72px]' }}
                               placeholder='Last Name'
@@ -230,6 +342,9 @@ const Signin = () => {
                             Username
                           </Typography>
                           <Input
+                            onChange={(e) =>
+                              setForm({ ...form, username: e.target.value })
+                            }
                             type='text'
                             placeholder='Username'
                             className=' !border-t-blue-gray-200 focus:!border-t-gray-900'
@@ -247,6 +362,9 @@ const Signin = () => {
                             Your Email
                           </Typography>
                           <Input
+                            onChange={(e) =>
+                              setForm({ ...form, email: e.target.value })
+                            }
                             type='email'
                             placeholder='name@mail.com'
                             className=' !border-t-blue-gray-200 focus:!border-t-gray-900'
@@ -262,10 +380,34 @@ const Signin = () => {
                             variant='small'
                             color='blue-gray'
                             className='mb-2 font-medium '>
+                            Address
+                          </Typography>
+
+                          <Input
+                            onChange={(e) =>
+                              setForm({ ...form, address: e.target.value })
+                            }
+                            maxLength={19}
+                            placeholder='Address'
+                            className=' !border-t-blue-gray-200 focus:!border-t-gray-900'
+                            labelProps={{
+                              className:
+                                'before:content-none after:content-none',
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <Typography
+                            variant='small'
+                            color='blue-gray'
+                            className='mb-2 font-medium '>
                             Phone
                           </Typography>
 
                           <Input
+                            onChange={(e) =>
+                              setForm({ ...form, phone: e.target.value })
+                            }
                             maxLength={19}
                             placeholder='Phone Number'
                             className=' !border-t-blue-gray-200 focus:!border-t-gray-900'
@@ -283,6 +425,9 @@ const Signin = () => {
                             Password
                           </Typography>
                           <Input
+                            onChange={(e) =>
+                              setForm({ ...form, password: e.target.value })
+                            }
                             type='password'
                             placeholder='**********'
                             className=' !border-t-blue-gray-200 focus:!border-t-gray-900'
@@ -292,12 +437,41 @@ const Signin = () => {
                             }}
                           />
                         </div>
-                        <Button size='lg'>Register</Button>
+                        <Button
+                          onClick={handleSubmitSignup}
+                          disabled={loadingSignup}
+                          size='lg'>
+                          Register
+                        </Button>
                       </form>
                     </TabPanel>
                   </TabsBody>
                 </Tabs>
               </CardBody>
+              {errForm && (
+                <Typography className='text-sm' color='red'>
+                  {errForm}
+                </Typography>
+              )}
+              {errMsg && (
+                <Typography className='text-sm' color='blue'>
+                  {errMsg}
+                </Typography>
+              )}
+              <div className='mt-4 text-center'>
+                {isLogin ? (
+                  <p>
+                    Tidak punya akun? <Link to='/signup'>Daftar</Link>
+                  </p>
+                ) : (
+                  <p>
+                    Sudah punya akun?{' '}
+                    <Link to='/login' className='font-bold'>
+                      Login
+                    </Link>
+                  </p>
+                )}
+              </div>
             </Card>
           </div>
         </div>
