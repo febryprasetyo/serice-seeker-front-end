@@ -29,6 +29,7 @@ const Navbar = () => {
               <img src={Logo} alt='hoobank' className='w-[124px] ' />
             </NavLink>
 
+            {/* DESKTOP */}
             <ul className='list-none sm:flex hidden justify-end items-center flex-1'>
               {navLinks.map((nav, index) => (
                 <li
@@ -59,6 +60,7 @@ const Navbar = () => {
                 onClick={() => setToggle(!toggle)}
               />
 
+              {/* MOBILE */}
               <div
                 className={`${
                   !toggle ? 'hidden' : 'flex'
@@ -75,6 +77,7 @@ const Navbar = () => {
                     </li>
                   ))}
                   <Button name='Search' styles={'w-[200px]'} />
+                  <p>MOBILE</p>
                 </ul>
               </div>
             </div>

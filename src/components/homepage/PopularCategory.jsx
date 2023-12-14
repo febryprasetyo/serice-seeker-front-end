@@ -3,6 +3,7 @@
 import styles from '@/style';
 import CardCategory from '@/components/card/card-category';
 import { Typography } from '@material-tailwind/react';
+import Button from '@/components/Button';
 const PopularCategory = () => {
   return (
     <section
@@ -23,6 +24,9 @@ const PopularCategory = () => {
         <CardCategory value='123' category='Category 1' />
         <CardCategory value='123' category='Category 1' />
         <CardCategory value='123' category='Category 1' />
+      </div>
+      <div>
+        <Button styles={'h-full w-[200px] mt-12'} name={'See all category'} />
       </div>
     </section>
   );
