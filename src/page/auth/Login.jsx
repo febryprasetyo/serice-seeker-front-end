@@ -1,5 +1,5 @@
-/* eslint-disable no-unused-vars */
-import { useState, useEffect } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '@/store/auth';
 import {
   Card,
@@ -12,11 +12,14 @@ import {
 } from '@material-tailwind/react';
 import { useNavigate } from 'react-router-dom';
 
-export function SignIn() {
+export function Login() {
   const { actionLogin, setLoadingLogin, errMsg, loadingLogin, isLogin } =
     useAuth();
-  const [form, setForm] = useState('username', 'password');
-  const [errForm, setErrForm] = useState();
+  const [form, setForm] = React.useState({
+    username: '',
+    password: '',
+  });
+  const [errForm, setErrForm] = React.useState();
   const navigate = useNavigate();
 
   const handleSubmitLogin = () => {
@@ -28,11 +31,12 @@ export function SignIn() {
     actionLogin(form);
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (isLogin) {
       navigate('/');
     }
   }, [isLogin, navigate]);
+
   return (
     <>
       <div className='absolute inset-0 z-0 h-full w-full bg-black/50' />
@@ -71,9 +75,6 @@ export function SignIn() {
               size='lg'
               crossOrigin='anonymous'
             />
-            {/* <div className="-ml-2.5">
-              <Checkbox label="Remember Me" crossOrigin={undefined} />
-            </div> */}
           </CardBody>
           <CardFooter className='pt-0'>
             <Button
@@ -90,4 +91,4 @@ export function SignIn() {
   );
 }
 
-export default SignIn;
+export default Login;

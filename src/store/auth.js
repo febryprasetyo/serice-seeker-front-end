@@ -28,9 +28,10 @@ export const useAuth = create((set) => ({
         },
       });
       const respJson = await resp.json();
+
       if (respJson?.success) {
         localStorage.setItem('user', JSON.stringify(respJson.message));
-        const expiredToken = new Date(new Date().getTime() + 3600 * 1000); // respon expires_in nya detik dalam 1 jam, aku kali 1000 agar berubah ke milidetik
+        const expiredToken = new Date(new Date().getTime() + 3600 * 1000);
         cookie.set('token', respJson?.data?.token, {
           expires: expiredToken,
           path: '/',
@@ -57,6 +58,50 @@ export const useAuth = create((set) => ({
           ...state,
           errMsg: message,
           loadingLogin: false,
+        }));
+      }
+    }
+  },
+
+  // actionSignup method
+  loadingSignup: false,
+  isSignup: false,
+  setLoadingSignup: (payload) => {
+    return set({ loadingSignup: payload });
+  },
+  actionSignup: async (payload) => {
+    localStorage.removeItem('user');
+    try {
+      const resp = await fetch(`${import.meta.env.VITE_URL_API}/auth/register`, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const respJson = await resp.json();
+
+      if (respJson?.success) {
+        return set((state) => ({
+          ...state,
+          isSignup: true,
+          loadingSignup: false,
+        }));
+      } else {
+        return set((state) => ({
+          ...state,
+          errMsg: respJson.message,
+          loadingSignup: false,
+        }));
+      }
+    } catch (error) {
+      let message;
+      if (error instanceof Error) {
+        message = error.message;
+        return set((state) => ({
+          ...state,
+          errMsg: message,
+          loadingSignup: false,
         }));
       }
     }
