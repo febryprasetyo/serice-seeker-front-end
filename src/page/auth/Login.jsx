@@ -9,6 +9,11 @@ import {
   Input,
   Button,
   Typography,
+  Tabs,
+  TabsHeader,
+  TabsBody,
+  Tab,
+  TabPanel,
 } from '@material-tailwind/react';
 import { useNavigate } from 'react-router-dom';
 
@@ -64,7 +69,7 @@ export function Login() {
             <Input
               onChange={(e) => setForm({ ...form, username: e.target.value })}
               type='text'
-              label='username'
+              label='Username'
               size='lg'
               crossOrigin='anonymous'
             />
@@ -85,6 +90,11 @@ export function Login() {
               Sign In
             </Button>
           </CardFooter>
+          <div className='mt-4 text-center'>
+            <p>
+              Belum punya akun? <Link to='/signup' className='font-bold'>Daftar</Link>
+            </p>
+          </div>
         </Card>
       </div>
     </>
