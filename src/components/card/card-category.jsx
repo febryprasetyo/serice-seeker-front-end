@@ -42,7 +42,7 @@ const CardCategory = ({ category, value }) => {
             size='sm'
             variant='text'
             className='flex justify-center gap-2'>
-            Learn More
+            See the Detail
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'
