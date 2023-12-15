@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import { Navbar } from '@/components';
+import { Footer } from '@/components';
 import Homepage from '@/page/Homepage';
+import JobPage from '@/page/job/jobPage'
 import Login from '@/page/auth/Login';
 import Signup from '@/page/auth/Signup';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
@@ -28,6 +30,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Homepage />}></Route>
           <Route path='/homepage' element={<Homepage />}></Route>
+          <Route path='/jobs' element={<JobPage />}></Route>
           <Route
             path='/login'
             element={<Login />}
@@ -37,6 +40,7 @@ function App() {
             element={<ProtectedSignupRoute element={<Signup />} />}
           ></Route>
         </Routes>
+        <Footer></Footer>
       </BrowserRouter>
     </>
   );
