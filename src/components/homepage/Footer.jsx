@@ -1,8 +1,8 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
+
 const footer = () => {
   return (
-        <div className="bg-primary text-white p-4 text-center container">
+        <div className="bg-primary w-full overflow-hidden text-white p-4 text-center ">
           <nav className="flex justify-center space-x-4 mb-4">
             <Link to="/about-us">About Us</Link>
             <Link to="/faq">FAQ</Link>
