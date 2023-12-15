@@ -4,5 +4,6 @@ import menu from './menu.svg';
 import shield from './Shield.svg';
 import star from './Star.svg';
 import send from './Send.svg';
+import defaultUserProfileImage from './defaultUserProfileImage.png'
 
-export { Logo, close, menu, shield, star, send };
+export { Logo, close, menu, shield, star, send, defaultUserProfileImage };
