@@ -7,8 +7,17 @@ import CardReview from './card/card-review';
 import CardJob from './card/CardJob';
 import JobCard from './jobs/jobCard';
 import CardPostingDetail from './card/CardPostingDetail';
+import CardActiveJob from './card/CardActiveJob';
+import CardDoneJob from './card/CardDoneJob';
+import CardReviewDashboard from './card/CardReviewDashboard'
 
 
+// CRUD
+import { CreateJob } from './jobs/CreateJob';
+
+// Dashboard
+import Header from './dashboard/Header';
+import Sidebar from './dashboard/Sidebar';
 
 // HomePage Section
 import Navbar from './homepage/Navbar';
@@ -25,6 +34,7 @@ export {
   CardCategory,
   CardReview,
   CardJob,
+  CreateJob,
   JobCard,
   CardPostingDetail,
   Navbar,
@@ -34,4 +44,10 @@ export {
   PopularReview,
   LatestJob,
   Footer,
+  Header,Sidebar,
+  CardActiveJob,
+
+
+CardReviewDashboard,
+  CardDoneJob
 };
