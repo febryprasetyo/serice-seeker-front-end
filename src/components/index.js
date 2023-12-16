@@ -15,9 +15,11 @@ import CardReviewDashboard from './card/CardReviewDashboard'
 // CRUD
 import { CreateJob } from './jobs/CreateJob';
 
-// Dashboard
-import Header from './dashboard/Header';
-import Sidebar from './dashboard/Sidebar';
+// Filter
+import RadiusFilter from './jobs/filter/RadiusFilter';
+import BudgetFilter from './jobs/filter/BudgetFilter';
+import CategoryFilter from './jobs/filter/CategoryFilter';
+import SearchFilter from './jobs/filter/SearchFilter';
 
 // HomePage Section
 import Navbar from './homepage/Navbar';
@@ -44,10 +46,12 @@ export {
   PopularReview,
   LatestJob,
   Footer,
-  Header,Sidebar,
   CardActiveJob,
+  RadiusFilter,
+  BudgetFilter,
+  CategoryFilter,
+  SearchFilter,
 
-
-CardReviewDashboard,
+  CardReviewDashboard,
   CardDoneJob
 };

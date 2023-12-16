@@ -1,19 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Suspense } from 'react';
 import Loader from '@/common/loader';
 import PropTypes from 'prop-types';
 import { Navbar } from '@/components';
 import { Footer } from '@/components';
 import Homepage from '@/page/Homepage';
-import LayoutDashboard from './layout/LayoutDashboard';
 import Dashboard from './page/dashboard/Dashboard';
 // import { JobDetail, JobPage } from '@/page/job';
 import Login from '@/page/auth/Login';
 import Signup from '@/page/auth/Signup';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import { useAuth } from '@/store/auth';
-import routes from '@/routes/routes';
-import { JobPage } from './page/job';
+import { JobPage2 } from './page/job';
 
 function ProtectedSignupRoute({ element }) {
   const { isLogin } = useAuth();
@@ -66,7 +63,7 @@ function App() {
             })}
           </Route> */}
 
-          <Route path='/jobs' element={<JobPage />}></Route>
+          <Route path='/jobs' element={<JobPage2 />}></Route>
 
           {/* auth */}
           <Route path='/login' element={<Login />}></Route>
