@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { getAllJobs } from '../../api/api';
 import { layout } from '@/style';
 import { CardJob } from '@/components';
 import { Typography } from '@material-tailwind/react';
@@ -9,16 +9,16 @@ const LatestJob = () => {
   const [jobs, setJobs] = useState([]);
 
   useEffect(() => {
-    axios
-      .get('https://service-seeker-api.vercel.app/jobs/all')
-      .then((response) => {
-        const res = response.data.jobs;
-        setJobs(res.reverse().slice(0, 5));
-        // console.log(response.data.jobs);
-      })
-      .catch((error) => {
+    const fetchLatestJobs = async () => {
+      try {
+        const response = await getAllJobs('Open', 'desc', null, 1);
+        setJobs(response.jobs.slice(0, 5));
+      } catch (error) {
         console.error(error);
-      });
+      }
+    };
+
+    fetchLatestJobs();
   }, []);
 
   return (
@@ -26,12 +26,7 @@ const LatestJob = () => {
       <div className={layout.sectionInfo}>
         <Typography variant='h2'>Latest Jobs</Typography>
         {jobs.map(({ id, title, address, category }, index) => (
-          <CardJob
-            key={id}
-            title={title}
-            address={address}
-            category={category}
-          />
+          <CardJob key={id} title={title} address={address} category={category} />
         ))}
       </div>
       <div className={layout.sectionInfo}></div>

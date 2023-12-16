@@ -35,7 +35,7 @@ const CardJob = ({ title, address, category }) => {
             </div>
           </div>
           <div className='grid justify-items-end'>
-            <Button className='font-normal'>Apply</Button>
+            <Button className='font-normal'>Detail</Button>
             <Typography className='text-right mt-2'>
               Area <span className='font-bold capitalize'>{address}</span>{' '}
             </Typography>

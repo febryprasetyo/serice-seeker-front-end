@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import cookie from 'js-cookie';
+import { loginUser, registerUser } from '../api/api';
 
 export const useAuth = create((set) => ({
   user: localStorage.getItem('user')
@@ -20,17 +21,11 @@ export const useAuth = create((set) => ({
   actionLogin: async (payload) => {
     localStorage.removeItem('user');
     try {
-      const resp = await fetch(`${import.meta.env.VITE_URL_API}/auth/login`, {
-        method: 'POST',
-        body: JSON.stringify(payload),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const respJson = await resp.json();
+      const respJson = await loginUser(payload);
+
       if (respJson?.success) {
         localStorage.setItem('user', JSON.stringify(respJson.message));
-        const expiredToken = new Date(new Date().getTime() + 3600 * 1000); // respon expires_in nya detik dalam 1 jam, aku kali 1000 agar berubah ke milidetik
+        const expiredToken = new Date(new Date().getTime() + 3600 * 1000);
         cookie.set('token', respJson?.data?.token, {
           expires: expiredToken,
           path: '/',
@@ -41,6 +36,7 @@ export const useAuth = create((set) => ({
           token: respJson?.data?._token,
           isLogin: true,
           loadingLogin: false,
+          errMsg: '', // Clear error message on success
         }));
       } else {
         return set((state) => ({
@@ -50,19 +46,18 @@ export const useAuth = create((set) => ({
         }));
       }
     } catch (error) {
-      let message;
+      let message = 'An error occurred while processing your request.';
       if (error instanceof Error) {
         message = error.message;
-        return set((state) => ({
-          ...state,
-          errMsg: message,
-          loadingLogin: false,
-        }));
       }
+      return set((state) => ({
+        ...state,
+        errMsg: message,
+        loadingLogin: false,
+      }));
     }
   },
 
-  // actionSignup method
   loadingSignup: false,
   isSignup: false,
   setLoadingSignup: (payload) => {
@@ -71,20 +66,14 @@ export const useAuth = create((set) => ({
   actionSignup: async (payload) => {
     localStorage.removeItem('user');
     try {
-      const resp = await fetch(`${import.meta.env.VITE_URL_API}/auth/register`, {
-        method: 'POST',
-        body: JSON.stringify(payload),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      const respJson = await resp.json();
+      const respJson = await registerUser(payload);
 
       if (respJson?.success) {
         return set((state) => ({
           ...state,
           isSignup: true,
           loadingSignup: false,
+          errMsg: '', // Clear error message on success
         }));
       } else {
         return set((state) => ({
@@ -94,15 +83,15 @@ export const useAuth = create((set) => ({
         }));
       }
     } catch (error) {
-      let message;
+      let message = 'An error occurred while processing your request.';
       if (error instanceof Error) {
         message = error.message;
-        return set((state) => ({
-          ...state,
-          errMsg: message,
-          loadingSignup: false,
-        }));
       }
+      return set((state) => ({
+        ...state,
+        errMsg: message,
+        loadingSignup: false,
+      }));
     }
   },
 }));
