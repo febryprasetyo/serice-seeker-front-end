@@ -10,6 +10,7 @@ import CardPostingDetail from './card/CardPostingDetail';
 import CardActiveJob from './card/CardActiveJob';
 import CardDoneJob from './card/CardDoneJob';
 import CardReviewDashboard from './card/CardReviewDashboard'
+import CardListJob from './card/CardListJob';
 
 
 // CRUD
@@ -51,7 +52,7 @@ export {
   BudgetFilter,
   CategoryFilter,
   SearchFilter,
-
   CardReviewDashboard,
-  CardDoneJob
+  CardDoneJob,
+  CardListJob
 };

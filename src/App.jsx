@@ -10,7 +10,7 @@ import Login from '@/page/auth/Login';
 import Signup from '@/page/auth/Signup';
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import { useAuth } from '@/store/auth';
-import { JobPage2 } from './page/job';
+import { JobDetail, JobPage2 } from './page/job';
 
 function ProtectedSignupRoute({ element }) {
   const { isLogin } = useAuth();
@@ -64,6 +64,7 @@ function App() {
           </Route> */}
 
           <Route path='/jobs' element={<JobPage2 />}></Route>
+          <Route path='/jobs/:id' element={<JobDetail />}></Route>
 
           {/* auth */}
           <Route path='/login' element={<Login />}></Route>

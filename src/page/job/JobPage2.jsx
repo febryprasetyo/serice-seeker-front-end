@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useEffect } from 'react';
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import {
@@ -14,17 +14,42 @@ import { FaPlusCircle, FaMinusCircle } from 'react-icons/fa';
 import styles from '@/style';
 import { Card, Typography } from '@material-tailwind/react';
 import { sortOptions, subCategories, filters } from '@/constants';
-import { RadiusFilter, SearchFilter } from '@/components';
-// import { Button } from '@/components';
+import { CardListJob, RadiusFilter, SearchFilter } from '@/components';
+import { searchJobs } from '@/api/api';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
 const JobPage2 = () => {
+  const [jobs, setJobs] = useState([]);
+
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const toggleOpen = () => setOpen((cur) => !cur);
+
+  useEffect(() => {
+    const fetchLatestJobs = async () => {
+      try {
+        const queryParams = {
+          status: 'Open',
+          sortBy: 'desc',
+          page: 1,
+          radius: 20000,
+        };
+
+        const response = await searchJobs(queryParams);
+
+        if (response.success) {
+          setJobs(response.jobs.jobs);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchLatestJobs();
+  }, []);
   return (
     <div className={`${styles.flexStart}`}>
       <div className={`${styles.boxWidth}`}>
@@ -159,71 +184,7 @@ const JobPage2 = () => {
 
         {/* MAIN COMPONENT */}
         <main className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
-          <div className='flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24'>
-            <h1 className='text-4xl font-bold tracking-tight text-gray-900'>
-              New Arrivals
-            </h1>
-
-            <div className='flex items-center'>
-              <Menu as='div' className='relative inline-block text-left'>
-                <div>
-                  <Menu.Button className='group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900'>
-                    Sort
-                    <ChevronDownIcon
-                      className='-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500'
-                      aria-hidden='true'
-                    />
-                  </Menu.Button>
-                </div>
-
-                <Transition
-                  as={Fragment}
-                  enter='transition ease-out duration-100'
-                  enterFrom='transform opacity-0 scale-95'
-                  enterTo='transform opacity-100 scale-100'
-                  leave='transition ease-in duration-75'
-                  leaveFrom='transform opacity-100 scale-100'
-                  leaveTo='transform opacity-0 scale-95'>
-                  <Menu.Items className='absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none'>
-                    <div className='py-1'>
-                      {sortOptions.map((option) => (
-                        <Menu.Item key={option.name}>
-                          {({ active }) => (
-                            <a
-                              href={option.href}
-                              className={classNames(
-                                option.current
-                                  ? 'font-medium text-gray-900'
-                                  : 'text-gray-500',
-                                active ? 'bg-gray-100' : '',
-                                'block px-4 py-2 text-sm'
-                              )}>
-                              {option.name}
-                            </a>
-                          )}
-                        </Menu.Item>
-                      ))}
-                    </div>
-                  </Menu.Items>
-                </Transition>
-              </Menu>
-
-              {/* Filter */}
-              <button
-                type='button'
-                className='-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden'
-                onClick={() => setMobileFiltersOpen(true)}>
-                <span className='sr-only'>Filters</span>
-                <FunnelIcon className='h-5 w-5' aria-hidden='true' />
-              </button>
-            </div>
-          </div>
-
           <section aria-labelledby='products-heading' className='pb-24 pt-6'>
-            <h2 id='products-heading' className='sr-only'>
-              Products
-            </h2>
-
             <div className='grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4'>
               {/* Filters */}
               <div>
@@ -292,11 +253,7 @@ const JobPage2 = () => {
                           </h3>
                           <Disclosure.Panel className='pt-6 rounded-lg'>
                             <div className='space-y-4'>
-                              <RadiusFilter
-                                priceValue={0}
-                                setPriceValue={50}
-                                maxPrice={50}
-                              />
+                              <RadiusFilter />
                             </div>
                           </Disclosure.Panel>
                         </>
@@ -306,8 +263,75 @@ const JobPage2 = () => {
                 </Card>
               </div>
 
-              {/* Product grid */}
-              <div className='lg:col-span-3'>{/* Your content */}</div>
+              {/*  List */}
+              <div className='lg:col-span-3'>
+                <div className='flex items-center content-end justify-end '>
+                  <Menu as='div' className='relative inline-block text-left'>
+                    <div>
+                      <Menu.Button className='group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900'>
+                        Sort
+                        <ChevronDownIcon
+                          className='-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500'
+                          aria-hidden='true'
+                        />
+                      </Menu.Button>
+                    </div>
+
+                    <Transition
+                      as={Fragment}
+                      enter='transition ease-out duration-100'
+                      enterFrom='transform opacity-0 scale-95'
+                      enterTo='transform opacity-100 scale-100'
+                      leave='transition ease-in duration-75'
+                      leaveFrom='transform opacity-100 scale-100'
+                      leaveTo='transform opacity-0 scale-95'>
+                      <Menu.Items className='absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none'>
+                        <div className='py-1'>
+                          {sortOptions.map((option) => (
+                            <Menu.Item key={option.name}>
+                              {({ active }) => (
+                                <a
+                                  href={option.href}
+                                  className={classNames(
+                                    option.current
+                                      ? 'font-medium text-gray-900'
+                                      : 'text-gray-500',
+                                    active ? 'bg-gray-100' : '',
+                                    'block px-4 py-2 text-sm'
+                                  )}>
+                                  {option.name}
+                                </a>
+                              )}
+                            </Menu.Item>
+                          ))}
+                        </div>
+                      </Menu.Items>
+                    </Transition>
+                  </Menu>
+
+                  {/* Filter */}
+                  <button
+                    type='button'
+                    className='-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden'
+                    onClick={() => setMobileFiltersOpen(true)}>
+                    <span className='sr-only'>Filters</span>
+                    <FunnelIcon className='h-5 w-5' aria-hidden='true' />
+                  </button>
+                </div>
+                <div className='flex flex-col border-l-purple-700 gap-3'>
+                  {jobs.map((job) => (
+                    <CardListJob
+                      key={job._id}
+                      id={job._id}
+                      address={job.address}
+                      distance={job.distance}
+                      price={job.budget}
+                      title={job.title}
+                      category={job.category}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
           </section>
         </main>

@@ -1,7 +1,9 @@
+/* eslint-disable no-undef */
 /* eslint-disable react/prop-types */
 import { Card, CardBody, Typography, Button } from '@material-tailwind/react';
+import { Link } from 'react-router-dom';
 
-const CardJob = ({ title, address, category }) => {
+const CardJob = ({ id, title, address, category }) => {
   return (
     <Card className='mt-6 w-full'>
       <CardBody>
@@ -35,7 +37,9 @@ const CardJob = ({ title, address, category }) => {
             </div>
           </div>
           <div className='grid justify-items-end'>
-            <Button className='font-normal'>Detail</Button>
+            <Link to={`/jobs/${id}`}>
+              <Button className='font-normal'>Detail</Button>
+            </Link>
             <Typography className='text-right mt-2'>
               Area <span className='font-bold capitalize'>{address}</span>{' '}
             </Typography>

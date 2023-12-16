@@ -1,10 +1,35 @@
+import { useState, useEffect } from 'react';
 import styles from '@/style';
+import { useParams } from 'react-router-dom';
+
 import { Typography } from '@material-tailwind/react';
 import { CardPostingDetail } from '@/components';
 import { BanknotesIcon, MapPinIcon } from '@heroicons/react/20/solid';
+import { getJobById } from '@/api/api';
 
 const JobDetail = () => {
-  const dateFromData = '2023-12-08T17:48:15.404Z'; //string type
+  const { id } = useParams();
+  // output will be: June 15, 1990
+
+  const [detail, setDetail] = useState([]);
+  useEffect(() => {
+    const fetchLatestJobs = async () => {
+      try {
+        const response = await getJobById(id);
+
+        if (response.success) {
+          setDetail(response);
+          // console.log(response.jobId);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchLatestJobs();
+  }, []);
+
+  const dateFromData = detail.createdAt; //string type
   const formatDate = (dateString) => {
     const options = {
       //Typescript ways of adding the type
@@ -14,8 +39,7 @@ const JobDetail = () => {
     };
     return new Date(dateString).toLocaleDateString('id', options);
   };
-  const jobPost = formatDate(dateFromData); // output will be: June 15, 1990
-
+  const jobPost = formatDate(dateFromData);
   return (
     <div className={`${styles.flexStart}`}>
       <div className={`${styles.boxWidth}`}>
@@ -36,34 +60,41 @@ const JobDetail = () => {
           <div className={`flex flex-wrap gap-10 `}>
             <div className={`bg-white grow p-8 w-3/12`}>
               <Typography variant='lead'>
-                {jobPost} by <span className='font-bold'>{'USER 123'}</span>
+                {jobPost} by{' '}
+                <span className='font-bold'>{detail.createdBy}</span>
               </Typography>
               <Typography className='mb-2' variant='h1'>
-                Senior Product & Brand Design
+                {detail.title}
               </Typography>
               <Typography
                 className='mb-2 font-thin text-[#214d76]'
                 variant='lead'>
-                Kategori
+                {detail.category}
               </Typography>
               <div className='flex gap-10'>
-                <div className='bg-blue-500 max-w-fit px-10 py-2 text-white font-extrabold rounded-md text-center align-middle'>
-                  OPEN
-                </div>
+                {detail.status == 'Open' ? (
+                  <div className='bg-blue-500 max-w-fit px-10 py-2 text-white font-extrabold rounded-md text-center align-middle'>
+                    {detail.status}
+                  </div>
+                ) : (
+                  <div className='bg-red-600 max-w-fit px-10 py-2 text-white font-extrabold rounded-md text-center align-middle'>
+                    {detail.status}
+                  </div>
+                )}
                 <div className='flex py-1 content-center align-middle gap-2'>
                   <BanknotesIcon
                     className=' w-8 text-blue-gray-600'
                     aria-hidden='true'
                     // color='blue-gray-200'
                   />
-                  <Typography variant='h5'>Rp. 30.000.000</Typography>
+                  <Typography variant='h5'>Rp. {detail.budget}</Typography>
                 </div>
                 <div className='flex py-1 content-center align-middle gap-2'>
                   <MapPinIcon
                     className=' w-8 text-blue-gray-600'
                     aria-hidden='true'
                   />
-                  <Typography variant='h5'>Malang</Typography>
+                  <Typography variant='h5'>{detail.address}</Typography>
                 </div>
               </div>
               <div className='mt-8'>
@@ -71,22 +102,11 @@ const JobDetail = () => {
                 <Typography variant='h3' className='mt-4'>
                   Description
                 </Typography>
-                <Typography className='mt-2'>
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry. Lorem Ipsum has been the industry
-                  standard dummy text ever since the 1500s, when an unknown
-                  printer took a galley of type and scrambled it to make a type
-                  specimen book. It has survived not only five centuries, but
-                  also the leap into electronic typesetting, remaining
-                  essentially unchanged. It was popularised in the 1960s with
-                  the release of Letraset sheets containing Lorem Ipsum
-                  passages, and more recently with desktop publishing software
-                  like Aldus PageMaker including versions of Lorem Ipsum.
-                </Typography>
+                <Typography className='mt-2'>{detail.description}</Typography>
               </div>
             </div>
             <div className={` w-1/3`}>
-              <CardPostingDetail createdBy={'USER 123'} />
+              <CardPostingDetail createdBy={detail.createdBy} />
             </div>
           </div>
         </div>

@@ -26,7 +26,13 @@ const LatestJob = () => {
       <div className={layout.sectionInfo}>
         <Typography variant='h2'>Latest Jobs</Typography>
         {jobs.map(({ id, title, address, category }, index) => (
-          <CardJob key={id} title={title} address={address} category={category} />
+          <CardJob
+            key={id}
+            id={id}
+            title={title}
+            address={address}
+            category={category}
+          />
         ))}
       </div>
       <div className={layout.sectionInfo}></div>
