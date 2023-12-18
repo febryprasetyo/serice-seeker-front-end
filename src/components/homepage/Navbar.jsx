@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { Logo, close, menu, defaultUserProfileImage } from '@/assets';
-import Button from '../Button';
 import { navLinks } from '@/constants';
 import styles from '@/style';
 import { useAuth } from '@/store/auth';
-import { getUserProfile } from '../../api/api'; // Update the path based on your actual path
+import { getUserProfile } from '../../api/api';
 
 const Navbar = () => {
   // State variables
   const [active, setActive] = useState('Home');
   const [toggle, setToggle] = useState(false);
-  const { isLogin, user, logOut } = useAuth();
+  const { isLogin, logOut } = useAuth();
   const [userProfile, setUserProfile] = useState(null);
+  const navigate = useNavigate()
 
   // Fetch user profile on login
   useEffect(() => {
@@ -42,7 +42,10 @@ const Navbar = () => {
   const handleLogout = () => {
     logOut();
     setToggle(true);
+    // Redirect to the home page after logout
+    navigate('/');
   };
+
   console.log()
   // Render user menu
   const renderUserMenu = () => (
@@ -56,16 +59,15 @@ const Navbar = () => {
         ) : (
           <img src={defaultUserProfileImage} alt="Default Profile" className="w-8 h-8 object-cover rounded-full" />
         )}
-        {/* { <span className="text-white font-medium">{userProfile?.data.username}</span> } */}
       </div>
 
       {toggle && (
-        <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
-          <NavLink to="/profile">
-            <div className="block px-4 py-2 text-gray-800 hover:bg-gray-200">Profile</div>
+        <div className={`relative right-0 mt-2 w-48 bg-black-gradient rounded-md shadow-lg py-1 ${styles.userMenu}`}>
+          <NavLink to="/dashboard">
+            <div className="block px-4 py-2 text-dimWhite hover:bg-gray-200">Dashboard</div>
           </NavLink>
           <div
-            className="block px-4 py-2 text-gray-800 hover:bg-gray-200 cursor-pointer"
+            className="block px-4 py-2 text-dimWhite hover:bg-gray-200 cursor-pointer"
             onClick={handleLogout}
           >
             Logout
@@ -122,7 +124,7 @@ const Navbar = () => {
                       } ${index === filteredNavLinks.length - 1 ? 'mb-0' : 'mb-4'}`}
                       onClick={() => setActive(nav.title)}
                     >
-                      <a href={`#${nav.id}`}>{nav.title}</a>
+                      <a href={`/${nav.id}`}>{nav.title}</a>
                     </li>
                   ))}
                 </ul>
