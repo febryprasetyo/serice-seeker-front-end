@@ -70,17 +70,15 @@ const getUserByUsername = async (username) => {
     }
 };
 
-const getUserJobs = async (username, accessToken) => {
+const getUserJobs = async (username) => {
   try {
-    const response = await axios.get(`${baseURL}/users/${username}/jobs`, {
-      headers: { Authorization: accessToken },
-    });
-    return response.data;
+    const response = (await axios.get(`${baseURL}/users/${username}/jobs`, config()));
+    return { success: true, data: response.data || [] }; // Add a fallback for undefined data
   } catch (error) {
-    throw error.response.data;
+    console.error('Error fetching user jobs:', error);
+    return { success: false, status: error.response?.status || 'Request failed' };
   }
 };
-
 const updateUserProfile = async (username, userData, accessToken) => {
   try {
     const response = await axios.put(`${baseURL}/users/${username}`, userData, {
