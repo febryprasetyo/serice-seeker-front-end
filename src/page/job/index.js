@@ -1,5 +1,5 @@
 import JobPage from "./jobPage";
-import JobPage2 from "./jobPage2";
+import JobPage2 from "./JobPage2";
 import JobDetail from "./JobDetail"
 
 export {
