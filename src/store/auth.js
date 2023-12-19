@@ -24,7 +24,7 @@ export const useAuth = create((set) => ({
       const respJson = await loginUser(payload);
 
       if (respJson?.success) {
-        localStorage.setItem('user', JSON.stringify(respJson.message));
+        localStorage.setItem('username', JSON.stringify(respJson?.data?.username));
         const expiredToken = new Date(new Date().getTime() + 3600 * 1000);
         cookie.set('token', respJson?.data?.token, {
           expires: expiredToken,

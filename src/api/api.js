@@ -81,7 +81,7 @@ const getUserJobs = async (username) => {
 };
 const updateUserProfile = async (username, userData) => {
   try {
-    const response = await axios.put(`${baseURL}/users/${username}`, userData, config());
+    const response = await axios.put(`${baseURL}/users/${username}/profile`, userData, config());
     return response.data;
   } catch (error) {
     throw error.response.data;

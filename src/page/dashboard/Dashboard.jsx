@@ -1,17 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import styles, { layout } from '@/style';
 import { Avatar, Card, Typography } from '@material-tailwind/react';
-import {
-  Button,
-  CardActiveJob,
-  CardDoneJob,
-  CardReviewDashboard,
-} from '@/components';
+import { Button, CardActiveJob, CardReviewDashboard } from '@/components';
 import { MapPinIcon, StarIcon, UserIcon } from '@heroicons/react/20/solid';
 import { getUserProfile, getUserJobs } from '../../api/api';
 import Loader from '../../common/loader';
-import { data } from 'browserslist';
-
 
 // Import the EditProfileForm component
 import EditProfileForm from './editProfileForm';
@@ -22,6 +15,7 @@ const Dashboard = () => {
   const [jobsData, setJobsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const [isProfileUpdated, setIsProfileUpdated] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,7 +49,7 @@ const Dashboard = () => {
     };
 
     fetchData();
-  }, []);
+  }, [isProfileUpdated]);
 
   return (
     <div className='bg-white w-full overflow-hidden mt-20'>
@@ -157,7 +151,7 @@ const Dashboard = () => {
       </div>
 
       {/* Conditionally render the EditProfileForm */}
-      {isEditingProfile && <EditProfileForm onCancel={() => setIsEditingProfile(false)} />}
+      {isEditingProfile && <EditProfileForm onCancel={() => setIsEditingProfile(false)} onProfileUpdate={() => setIsProfileUpdated((prev) => !prev)} />}
     </div>
   );
 };

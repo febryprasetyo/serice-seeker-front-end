@@ -1,17 +1,22 @@
-import React, { useState } from 'react';
-import { Input } from '@material-tailwind/react';
-import { Button } from '@/components';
-  
+/* eslint-disable react/prop-types */
+import { useState} from 'react';
+import { Input, Button, Typography } from '@material-tailwind/react';
+import { updateUserProfile } from '@/api/api';
 
-const EditProfileForm = ({ onCancel }) => {
+
+
+const EditProfileForm = ({ onCancel, onProfileUpdate }) => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    phone: '',
     email: '',
     address: '',
-    // Add more form fields as needed
+    phone: '',
   });
+
+  // Ambil username dari localStorage
+  const storedUsername = localStorage.getItem('username');
+  const userData = storedUsername ? JSON.parse(storedUsername) : {};
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,15 +26,31 @@ const EditProfileForm = ({ onCancel }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add logic to handle form submission (e.g., API call to update profile)
-    console.log('Form data submitted:', formData);
-    // Reset form or close modal as needed
+
+    try {
+      const response = await updateUserProfile(userData, formData);
+      console.log('Profile updated successfully:', response);
+
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        address: '',
+        phone: '',
+      });
+
+      onCancel();
+
+      // Panggil fungsi callback untuk memberi tahu komponen Dashboard bahwa profil telah diperbarui
+      onProfileUpdate();
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
   };
 
   const closeModal = () => {
-    // Add logic to close the modal
     onCancel();
   };
 
@@ -43,10 +64,13 @@ const EditProfileForm = ({ onCancel }) => {
           X
         </button>
         <div className="flex justify-center">
-        <h2 className="text-2xl mb-4">Edit Profile</h2>
+          <h2 className="text-2xl mb-4">Edit Profile</h2>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
+            <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
+              First Name
+            </Typography>
             <Input
               type="text"
               name="firstName"
@@ -54,10 +78,13 @@ const EditProfileForm = ({ onCancel }) => {
               onChange={handleChange}
               placeholder="First Name"
               size="md"
-              outline="true"
+              outline={true}
             />
           </div>
           <div className="mb-4">
+            <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
+              Last Name
+            </Typography>
             <Input
               type="text"
               name="lastName"
@@ -65,21 +92,13 @@ const EditProfileForm = ({ onCancel }) => {
               onChange={handleChange}
               placeholder="Last Name"
               size="md"
-              outline="true"
+              outline={true}
             />
           </div>
           <div className="mb-4">
-            <Input
-              type="text"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              placeholder="Phone"
-              size="md"
-              outline="true"
-            />
-          </div>
-          <div className="mb-4">
+            <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
+              Your Email
+            </Typography>
             <Input
               type="email"
               name="email"
@@ -87,10 +106,13 @@ const EditProfileForm = ({ onCancel }) => {
               onChange={handleChange}
               placeholder="Email"
               size="md"
-              outline="true"
+              outline={true}
             />
           </div>
           <div className="mb-4">
+            <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
+              Address
+            </Typography>
             <Input
               type="text"
               name="address"
@@ -98,18 +120,27 @@ const EditProfileForm = ({ onCancel }) => {
               onChange={handleChange}
               placeholder="Address"
               size="md"
-              outline="true"
+              outline={true}
             />
           </div>
-          {/* Add more form fields as needed */}
+          <div className="mb-4">
+            <Typography variant="small" color="blue-gray" className="mb-2 font-medium">
+              Phone
+            </Typography>
+            <Input
+              type="text"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder="Phone"
+              size="md"
+              outline={true}
+            />
+          </div>
           <div className="flex justify-center">
-          <Button
-            type="submit"
-            name={ 'Save' }
-            styles={
-                'w-[80px] py-2 px-2 font-poppins font-medium text-[14px] text-primary bg-blue-gradient rounded-[10px] outline-none '
-              }
-          />
+            <Button
+              type="submit"
+            >save</Button>
           </div>
         </form>
       </div>
