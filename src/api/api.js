@@ -79,11 +79,9 @@ const getUserJobs = async (username) => {
     return { success: false, status: error.response?.status || 'Request failed' };
   }
 };
-const updateUserProfile = async (username, userData, accessToken) => {
+const updateUserProfile = async (username, userData) => {
   try {
-    const response = await axios.put(`${baseURL}/users/${username}`, userData, {
-      headers: { Authorization: accessToken },
-    });
+    const response = await axios.put(`${baseURL}/users/${username}`, userData, config());
     return response.data;
   } catch (error) {
     throw error.response.data;
