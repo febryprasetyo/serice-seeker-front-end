@@ -13,30 +13,30 @@ import Loader from '../../common/loader';
 import { data } from 'browserslist';
 
 
+// Import the EditProfileForm component
+import EditProfileForm from './editProfileForm';
+
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [profileData, setProfileData] = useState(null);
   const [jobsData, setJobsData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Fetch user profile data
         const profileResponse = await getUserProfile();
-  
+
         if (profileResponse.success) {
-          console.log('Profile data:', profileResponse.data);
-  
           setProfileData(profileResponse.data);
-          const userName = profileResponse.data.username
-          console.log('data dari response profile:', userName)
-  
-          // Check if username is available before fetching jobs
+
           if (profileResponse.data && profileResponse.data.username) {
+            // Fetch user jobs data
             const jobsResponse = await getUserJobs(profileResponse.data.username);
 
             if (jobsResponse.success) {
-              console.log('Jobs data:', jobsResponse.data);
               setJobsData(jobsResponse.data);
             } else {
               console.error('Failed to fetch jobs:', jobsResponse.status);
@@ -53,43 +53,45 @@ const Dashboard = () => {
         setLoading(false);
       }
     };
-  
+
     fetchData();
   }, []);
 
   return (
     <div className='bg-white w-full overflow-hidden mt-20'>
       {/* Bagian Profil */}
-          {loading ? (
-            <Loader />
-          ) : profileData ? (
-            <Card color='transparent' shadow={false} className={`w-full ${styles.paddingX}`}>
-              <div className='flex gap-10'>
-                <Avatar size='xxl' src={profileData.profileImage} alt='avatar'></Avatar>
-                <div>
-                  <Typography variant='h3'>{`${profileData.firstName} (${profileData.username})`}</Typography>
-                  <div className='flex py-1 content-center align-middle gap-2'>
-                    <UserIcon className=' w-5 text-blue-gray-500' aria-hidden='true' />
-                    <Typography>{`${profileData.role}`}</Typography>
-                  </div>
-                  <div className='flex py-1 content-center align-middle gap-2'>
-                    <StarIcon className=' w-5 text-yellow-700' aria-hidden='true' />
-                    <Typography>
-                      {profileData.ratings.averageRating !== 0
-                        ? profileData.ratings.averageRating
-                        : 'N/A'}
-                    </Typography>
-                  </div>
-                  <div className='flex py-1 content-center align-middle gap-2'>
-                    <MapPinIcon className=' w-5 text-red-400' aria-hidden='true' />
-                    <Typography>{`${profileData.address}`}</Typography>
-                  </div>
-                </div>
+      {loading ? (
+        <Loader />
+      ) : profileData ? (
+        <Card color='transparent' shadow={false} className={`w-full ${styles.paddingX}`}>
+          <div className='flex gap-10'>
+            <Avatar size='xxl' src={profileData.profileImage} alt='avatar'></Avatar>
+            <div>
+              <Typography variant='h3'>{`${profileData.firstName} (${profileData.username})`}</Typography>
+              <div className='flex py-1 content-center align-middle gap-2'>
+                <UserIcon className=' w-5 text-blue-gray-500' aria-hidden='true' />
+                <Typography>{`${profileData.role}`}</Typography>
               </div>
-            </Card>
-          ) : (
-            <p>Error loading profile data</p>
-          )}
+              <div className='flex py-1 content-center align-middle gap-2'>
+                <StarIcon className=' w-5 text-yellow-700' aria-hidden='true' />
+                <Typography>
+                  {profileData.ratings.averageRating !== 0
+                    ? profileData.ratings.averageRating
+                    : 'N/A'}
+                </Typography>
+              </div>
+              <div className='flex py-1 content-center align-middle gap-2'>
+                <MapPinIcon className=' w-5 text-red-400' aria-hidden='true' />
+                <Typography>{`${profileData.address}`}</Typography>
+              </div>
+            </div>
+          </div>
+          {/* Add the button to trigger the edit form */}
+          <button onClick={() => setIsEditingProfile(true)}>Edit Profile</button>
+        </Card>
+      ) : (
+        <p>Error loading profile data</p>
+      )}
 
       {/* Bagian Tab Menu */}
       <div className={`${styles.padding} ${styles.flexCenter}`}>
@@ -101,20 +103,12 @@ const Dashboard = () => {
                 activeTab === 0 ? 'bg-primary text-white' : 'text-primary'
               } px-4 py-2 rounded`}
             >
-              Pekerjaan Aktif
-            </button>
-            <button
-              onClick={() => setActiveTab(1)}
-              className={`${
-                activeTab === 1 ? 'bg-primary text-white' : 'text-primary'
-              } px-4 py-2 rounded`}
-            >
-              Pekerjaan Selesai
+              Pekerjaan saya
             </button>
             <button
               onClick={() => setActiveTab(2)}
               className={`${
-                activeTab === 2 ? 'bg-primary text-white' : 'text-primary'
+                activeTab === 1 ? 'bg-primary text-white' : 'text-primary'
               } px-4 py-2 rounded`}
             >
               Rating dan Ulasan
@@ -123,8 +117,8 @@ const Dashboard = () => {
         </div>
       </div>
 
-{/* Konten Tab */}
-<div className={`${styles.paddingX} ${styles.flexCenter}`}>
+      {/* Konten Tab */}
+      <div className={`${styles.paddingX} ${styles.flexCenter}`}>
         <div className={`${styles.boxWidth} mt-4 flex flex-wrap`}>
           {activeTab === 0 && profileData?.username ? (
             <section className={`${layout.section} flex flex-wrap justify-start`}>
@@ -137,14 +131,6 @@ const Dashboard = () => {
           {activeTab === 1 && (
             <section className={layout.section}>
               <div className={layout.sectionInfo}>
-                <CardDoneJob title={'Judul pekerjaan'} status={'Hasil Review'} />
-              </div>
-            </section>
-          )}
-
-          {activeTab === 2 && (
-            <section className={layout.section}>
-              <div className={layout.sectionInfo}>
                 <CardReviewDashboard
                   nama={'Nama Reviewer'}
                   rating={'3'}
@@ -155,7 +141,6 @@ const Dashboard = () => {
               </div>
             </section>
           )}
-
         </div>
       </div>
 
@@ -170,7 +155,11 @@ const Dashboard = () => {
           />
         </div>
       </div>
+
+      {/* Conditionally render the EditProfileForm */}
+      {isEditingProfile && <EditProfileForm onCancel={() => setIsEditingProfile(false)} />}
     </div>
   );
 };
+
 export default Dashboard;
